@@ -24,7 +24,7 @@
 //#define ST_NUCLEO64_F091RC // nanoff --target ST_NUCLEO64_F091RC --update 
 //#define ST_NUCLEO144_F746ZG //nanoff --target ST_NUCLEO144_F746ZG --update
 
-namespace devMobile.IoT.LoRaWAN.NetCore.RAK4200
+namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 {
 	using System;
 	using System.Diagnostics;
@@ -65,7 +65,7 @@ namespace devMobile.IoT.LoRaWAN.NetCore.RAK4200
 			Thread readThread = new Thread(SerialPortProcessor);
 #endif
 
-			Debug.WriteLine("devMobile.IoT.LoRaWAN.NetNF.RAK4200 BreakoutSerial starting");
+			Debug.WriteLine("devMobile.IoT.LoRaWAN.nanoFramework.RAK4200 BreakoutSerial starting");
 
 			Debug.Write("Ports:");
 			foreach (string port in SerialPort.GetPortNames())
