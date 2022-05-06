@@ -92,10 +92,13 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 				_SerialPort.Handshake = Handshake.None;
 
 				_SerialPort.ReadTimeout = 1000;
-				_SerialPort.WatchChar = '\n';
 				_SerialPort.NewLine = "\r\n";
 
+				//_SerialPort.WatchChar = '\n'; // May 2022 WatchChar event didn't fire github issue https://github.com/nanoframework/Home/issues/1035
+
 				_SerialPort.Open();
+
+				_SerialPort.WatchChar = '\n';
 
 #if SERIAL_THREADED_READ
 				readThread.Start();
@@ -129,19 +132,27 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 		private static void SerialDevice_DataReceived(object sender, SerialDataReceivedEventArgs e)
 		{
 			SerialPort serialPort = (SerialPort)sender;
+			string response;
 
 			switch (e.EventType)
 			{
 				case SerialData.Chars:
-					string response = serialPort.ReadExisting();
+					/*
+					response = serialPort.ReadExisting();
 
 					if ( response.Length>0)
 					{ 
-						Debug.WriteLine($"RX:{response.Trim()} bytes:{response.Length}");
+						Debug.WriteLine($"RX Char:{response.Trim()} bytes:{response.Length}");
 					}
+					*/
 					break;
 				case SerialData.WatchChar:
-					Debug.WriteLine($"RX:WatchChar");
+					response = serialPort.ReadExisting();
+
+					if (response.Length > 0)
+					{
+						Debug.WriteLine($"RX WatchChar :{response.Trim()} bytes:{response.Length}");
+					}
 					break;
 				default:
 					Debug.Assert(false, $"e.EventType {e.EventType} unknown");
@@ -153,19 +164,18 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 #if SERIAL_THREADED_READ
 		public static void SerialPortProcessor()
 		{
-			string message;
 
 			while (_Continue)
 			{
 				try
 				{
-					message = _SerialPort.ReadLine();
-					Console.WriteLine($"{DateTime.UtcNow:HH:mm:ss} 1:{message}");
+					string response = _SerialPort.ReadLine();
+					//string response = _SerialPort.ReadExisting();
+					Console.WriteLine($"RX:{response} bytes:{response.Length}");
 				}
-				catch (TimeoutException) 
+				catch (TimeoutException ex) 
 				{
-					message = _SerialPort.ReadExisting();
-					Console.WriteLine($"{DateTime.UtcNow:HH:mm:ss} Timeout:{message}");
+					Console.WriteLine($"Timeout:{ex.Message}");
 				}
 			}
 		}
