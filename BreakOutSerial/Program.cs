@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+// https://docs.rakwireless.com/Product-Categories/WisDuo/RAK4200-Breakout-Board/AT-Command-Manual/
 //---------------------------------------------------------------------------------
 //#define SERIAL_SYNC_READ
 #define SERIAL_ASYNC_READ
@@ -29,6 +30,7 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 	using System;
 	using System.Diagnostics;
 	using System.IO.Ports;
+	using System.Text;
 	using System.Threading;
 
 	public class Program
@@ -85,16 +87,22 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 				_SerialPort = new SerialPort(SerialPortId);
 
 				// set parameters
-				_SerialPort.BaudRate = 115200;
+				_SerialPort.BaudRate = 9600;
+				//_SerialPort.BaudRate = 115200;
 				_SerialPort.Parity = Parity.None;
 				_SerialPort.DataBits = 8;
 				_SerialPort.StopBits = StopBits.One;
 				_SerialPort.Handshake = Handshake.None;
 
+				_SerialPort.ReadBufferSize = 1024;
 				_SerialPort.ReadTimeout = 1000;
 				_SerialPort.NewLine = "\r\n";
 
 				//_SerialPort.WatchChar = '\n'; // May 2022 WatchChar event didn't fire github issue https://github.com/nanoframework/Home/issues/1035
+
+#if SERIAL_ASYNC_READ
+				_SerialPort.DataReceived += SerialDevice_DataReceived;
+#endif
 
 				_SerialPort.Open();
 
@@ -104,13 +112,16 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 				readThread.Start();
 #endif
 
-#if SERIAL_ASYNC_READ
-				_SerialPort.DataReceived += SerialDevice_DataReceived;
-#endif
-
 				while (true)
 				{
-					string atCommand = "at+version";
+					string atCommand;
+					atCommand = "at+version";
+					//atCommand = "at+set_config=device:uart:1:9600";
+					//atCommand = "at+get_config=lora:status";
+					//atCommand = "at+get_config=device:status";
+					//atCommand = "at+get_config=lora:channel";
+					atCommand = "at+help";
+					//atCommand = "at+set_config=device:restart";
 					Debug.WriteLine($"TX:{atCommand} bytes:{atCommand.Length}");
 					_SerialPort.WriteLine(atCommand);
 
@@ -151,7 +162,7 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 
 					if (response.Length > 0)
 					{
-						Debug.WriteLine($"RX WatchChar :{response.Trim()} bytes:{response.Length}");
+						Debug.Write($"RX WatchChar :{response} bytes:{response.Length}");
 					}
 					break;
 				default:
