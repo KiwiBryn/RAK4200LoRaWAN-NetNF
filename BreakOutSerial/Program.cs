@@ -120,7 +120,7 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 					//atCommand = "at+get_config=lora:status";
 					//atCommand = "at+get_config=device:status";
 					//atCommand = "at+get_config=lora:channel";
-					atCommand = "at+help";
+					//atCommand = "at+help";
 					//atCommand = "at+set_config=device:restart";
 					Debug.WriteLine($"TX:{atCommand} bytes:{atCommand.Length}");
 					_SerialPort.WriteLine(atCommand);
@@ -148,22 +148,26 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 			switch (e.EventType)
 			{
 				case SerialData.Chars:
-					/*
 					response = serialPort.ReadExisting();
 
+					Debug.Write(response);
+					/*
 					if ( response.Length>0)
 					{ 
 						Debug.WriteLine($"RX Char:{response.Trim()} bytes:{response.Length}");
 					}
 					*/
 					break;
+				
 				case SerialData.WatchChar:
+					/*
 					response = serialPort.ReadExisting();
 
 					if (response.Length > 0)
 					{
 						Debug.Write($"RX WatchChar :{response} bytes:{response.Length}");
 					}
+				*/
 					break;
 				default:
 					Debug.Assert(false, $"e.EventType {e.EventType} unknown");
