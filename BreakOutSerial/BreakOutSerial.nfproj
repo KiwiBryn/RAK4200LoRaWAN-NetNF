@@ -15,7 +15,6 @@
     <RootNamespace>BreakOutSerial</RootNamespace>
     <AssemblyName>BreakOutSerial</AssemblyName>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
-    <UserSecretsId>9787f5ae-68fa-43a9-a33b-9302fce29e5b</UserSecretsId>
   </PropertyGroup>
   <Import Project="$(NanoFrameworkProjectSystemPath)NFProjectSystem.props" Condition="Exists('$(NanoFrameworkProjectSystemPath)NFProjectSystem.props')" />
   <ItemGroup>
