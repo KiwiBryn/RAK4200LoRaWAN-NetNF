@@ -15,12 +15,11 @@
 //
 // https://docs.rakwireless.com/Product-Categories/WisDuo/RAK4200-Breakout-Board/AT-Command-Manual/
 //---------------------------------------------------------------------------------
-//#define SERIAL_SYNC_READ
 #define SERIAL_ASYNC_READ
 //#define SERIAL_THREADED_READ
 #define ST_STM32F769I_DISCOVERY      // nanoff --target ST_STM32F769I_DISCOVERY --update 
+//#define ESP32_WROOM   //nanoff --target ESP32_PSRAM_REV0 --serialport COM17 --update
 // May 2022 Still experiencing issues with ComPort assignments
-//#define ESP32_WROOM   //nanoff --target ESP32_WROOM_32 --serialport COM4 --update
 //#define NETDUINO3_WIFI   // nanoff --target NETDUINO3_WIFI --update
 //#define ST_NUCLEO64_F091RC // nanoff --target ST_NUCLEO64_F091RC --update 
 //#define ST_NUCLEO144_F746ZG //nanoff --target ST_NUCLEO144_F746ZG --update
@@ -30,8 +29,10 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 	using System;
 	using System.Diagnostics;
 	using System.IO.Ports;
-	using System.Text;
 	using System.Threading;
+#if ESP32_WROOM
+	using global::nanoFramework.Hardware.Esp32; //need NuGet nanoFramework.Hardware.Esp32
+#endif
 
 	public class Program
 	{
@@ -40,7 +41,7 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 		private static Boolean _Continue = true;
 #endif
 #if ESP32_WROOM
-      private const string SerialPortId = "";
+		private const string SerialPortId = "COM2";
 #endif
 #if NETDUINO3_WIFI
       private const string SerialPortId = "COM3";
@@ -69,69 +70,71 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 
 			Debug.WriteLine("devMobile.IoT.LoRaWAN.nanoFramework.RAK4200 BreakoutSerial starting");
 
-			Debug.Write("Ports:");
-			foreach (string port in SerialPort.GetPortNames())
-			{
-				Debug.Write($" {port}");
-			}
-			Debug.WriteLine("");
-
 			try
 			{
 				// set GPIO functions for COM2 (this is UART1 on ESP32)
 #if ESP32_WROOM
-				Configuration.SetPinFunction(Gpio.IO04, DeviceFunction.COM2_TX);
-            Configuration.SetPinFunction(Gpio.IO05, DeviceFunction.COM2_RX);
+				Configuration.SetPinFunction(Gpio.IO16, DeviceFunction.COM2_TX);
+				Configuration.SetPinFunction(Gpio.IO17, DeviceFunction.COM2_RX);
 #endif
 
-				_SerialPort = new SerialPort(SerialPortId);
+				Debug.Write("Ports:");
+				foreach (string port in SerialPort.GetPortNames())
+				{
+					Debug.Write($" {port}");
+				}
+				Debug.WriteLine("");
 
-				// set parameters
-				_SerialPort.BaudRate = 9600;
-				//_SerialPort.BaudRate = 115200;
-				_SerialPort.Parity = Parity.None;
-				_SerialPort.DataBits = 8;
-				_SerialPort.StopBits = StopBits.One;
-				_SerialPort.Handshake = Handshake.None;
+				using (_SerialPort = new SerialPort(SerialPortId))
+				{
+					// set parameters
+					_SerialPort.BaudRate = 9600;
+					//_SerialPort.BaudRate = 115200;
+					_SerialPort.Parity = Parity.None;
+					_SerialPort.DataBits = 8;
+					_SerialPort.StopBits = StopBits.One;
+					_SerialPort.Handshake = Handshake.None;
+					_SerialPort.NewLine = "\r\n";
 
-				_SerialPort.ReadBufferSize = 1024;
-				_SerialPort.ReadTimeout = 1000;
-				_SerialPort.NewLine = "\r\n";
+					//_SerialPort.ReadBufferSize = 128; 
+					//_SerialPort.ReadBufferSize = 256; 
+					_SerialPort.ReadBufferSize = 512; 
+					//_SerialPort.ReadBufferSize = 1024;
+					_SerialPort.ReadTimeout = 1000;
 
-				//_SerialPort.WatchChar = '\n'; // May 2022 WatchChar event didn't fire github issue https://github.com/nanoframework/Home/issues/1035
+					//_SerialPort.WatchChar = '\n'; // May 2022 WatchChar event didn't fire github issue https://github.com/nanoframework/Home/issues/1035
 
 #if SERIAL_ASYNC_READ
-				_SerialPort.DataReceived += SerialDevice_DataReceived;
+					_SerialPort.DataReceived += SerialDevice_DataReceived;
 #endif
 
-				_SerialPort.Open();
+					_SerialPort.Open();
 
-				_SerialPort.WatchChar = '\n';
+					_SerialPort.WatchChar = '\n';
 
 #if SERIAL_THREADED_READ
-				readThread.Start();
+					readThread.Start();
 #endif
 
-				while (true)
-				{
-					string atCommand;
-					atCommand = "at+version";
-					//atCommand = "at+set_config=device:uart:1:9600";
-					//atCommand = "at+get_config=lora:status";
-					//atCommand = "at+get_config=device:status";
-					//atCommand = "at+get_config=lora:channel";
-					//atCommand = "at+help";
-					//atCommand = "at+set_config=device:restart";
-					Debug.WriteLine($"TX:{atCommand} bytes:{atCommand.Length}");
-					_SerialPort.WriteLine(atCommand);
+					for (int i = 0; i < 5; i++)
+					{
+						string atCommand;
+						atCommand = "at+version";
+						//atCommand = "at+set_config=device:uart:1:9600";
+						//atCommand = "at+get_config=lora:status";
+						//atCommand = "at+get_config=device:status";
+						//atCommand = "at+get_config=lora:channel";
+						//atCommand = "at+help";
+						//atCommand = "at+set_config=device:restart";
+						//atCommand = "at+set_config=lora:default_parameters";
+						Debug.WriteLine("");
+						Debug.WriteLine($"{i} TX:{atCommand} bytes:{atCommand.Length}--------------------------------");
+						_SerialPort.WriteLine(atCommand);
 
-#if SERIAL_SYNC_READ
-					// Read the response
-					string response = _SerialPort.ReadLine();
-					Debug.WriteLine($"RX:{response.Trim()} bytes:{response.Length}");
-#endif
-					Thread.Sleep(20000);
+						Thread.Sleep(5000);
+					}
 				}
+				Debug.WriteLine("Done");
 			}
 			catch (Exception ex)
 			{
@@ -143,31 +146,15 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 		private static void SerialDevice_DataReceived(object sender, SerialDataReceivedEventArgs e)
 		{
 			SerialPort serialPort = (SerialPort)sender;
-			string response;
 
 			switch (e.EventType)
 			{
 				case SerialData.Chars:
-					response = serialPort.ReadExisting();
-
-					Debug.Write(response);
-					/*
-					if ( response.Length>0)
-					{ 
-						Debug.WriteLine($"RX Char:{response.Trim()} bytes:{response.Length}");
-					}
-					*/
 					break;
-				
-				case SerialData.WatchChar:
-					/*
-					response = serialPort.ReadExisting();
 
-					if (response.Length > 0)
-					{
-						Debug.Write($"RX WatchChar :{response} bytes:{response.Length}");
-					}
-				*/
+				case SerialData.WatchChar:
+					string response = serialPort.ReadExisting();
+					Debug.Write(response);
 					break;
 				default:
 					Debug.Assert(false, $"e.EventType {e.EventType} unknown");
@@ -186,11 +173,11 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 				{
 					string response = _SerialPort.ReadLine();
 					//string response = _SerialPort.ReadExisting();
-					Console.WriteLine($"RX:{response} bytes:{response.Length}");
+					Debug.Write(response);
 				}
 				catch (TimeoutException ex) 
 				{
-					Console.WriteLine($"Timeout:{ex.Message}");
+					Debug.WriteLine($"Timeout:{ex.Message}");
 				}
 			}
 		}
