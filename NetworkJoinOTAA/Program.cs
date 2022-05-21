@@ -15,24 +15,32 @@
 //
 //---------------------------------------------------------------------------------
 #define ST_STM32F769I_DISCOVERY      // nanoff --target ST_STM32F769I_DISCOVERY --update 
+//#define ESP32_WROOM   //nanoff --target ESP32_WROOM_32 --serialport COM17 --update
 // May 2022 Still experiencing issues with ComPort assignments
-//#define ESP32_WROOM   //nanoff --target ESP32_WROOM_32 --serialport COM4 --update
 //#define NETDUINO3_WIFI   // nanoff --target NETDUINO3_WIFI --update
 namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 {
    using System;
 	using System.Diagnostics;
    using System.IO.Ports;
-   using System.Threading;
+	using System.Threading;
+#if ESP32_WROOM
+   using global::nanoFramework.Hardware.Esp32; ///need NuGet nanoFramework.Hardware.Esp32
+#endif
 
    public class Program
 	{
+#if ST_STM32F769I_DISCOVERY
       private const string SerialPortId = "COM6";
+#endif
+#if ESP32_WROOM
+      private const string SerialPortId = "COM2";
+#endif
       private const string DevEui = "...";
       private const string AppEui = "...";
       private const string AppKey = "...";
       private const byte MessagePort = 1;
-      private const string Payload = "48656c6c6f204c6f526157414e"; // Hello LoRaWAN
+      private const string Payload = "01020304"; // Is AQIDBA==
 
       public static void Main()
       {
@@ -40,15 +48,20 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
 
          Debug.WriteLine("devMobile.IoT.Rak4200.NetworkJoinOTAA starting");
 
-         Debug.Write("Ports:");
-         foreach (string port in SerialPort.GetPortNames())
-         {
-            Debug.Write($" {port}");
-         }
-         Debug.WriteLine("");
-
          try
          {
+#if ESP32_WROOM
+            Configuration.SetPinFunction(Gpio.IO16, DeviceFunction.COM2_TX);
+            Configuration.SetPinFunction(Gpio.IO17, DeviceFunction.COM2_RX);
+#endif
+
+            Debug.Write("Ports:");
+            foreach (string port in SerialPort.GetPortNames())
+            {
+               Debug.Write($" {port}");
+            }
+            Debug.WriteLine("");
+
             using (SerialPort serialDevice = new SerialPort(SerialPortId))
             {
                // set parameters
@@ -60,6 +73,10 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
                serialDevice.DataBits = 8;
 
                serialDevice.ReadTimeout = 10000;
+               //serialDevice.ReadBufferSize = 128; // Exception on ESP32
+               //serialDevice.ReadBufferSize = 256; 
+               serialDevice.ReadBufferSize = 512;
+               //serialDevice.ReadBufferSize = 1024;
 
                serialDevice.NewLine = "\r\n";
 
@@ -76,51 +93,51 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
                Thread.Sleep(500);
 
                // Set the Working mode to LoRaWAN
-               Console.WriteLine("lora:work_mode:0");
+               Debug.WriteLine("lora:work_mode:0");
                serialDevice.WriteLine("at+set_config=lora:work_mode:0");
+               Thread.Sleep(1500);
 
                // Set the JoinMode
-               Console.WriteLine("lora:join_mode");
+               Debug.WriteLine("lora:join_mode");
                serialDevice.WriteLine("at+set_config=lora:join_mode:0");
                Thread.Sleep(500);
 
                // Set the Class
-               Console.WriteLine("lora:class");
+               Debug.WriteLine("lora:class");
                serialDevice.WriteLine("at+set_config=lora:class:0");
                Thread.Sleep(500);
 
                // Set the Region to AS923
-               Console.WriteLine("lora:region:AS923");
+               Debug.WriteLine("lora:region");
                serialDevice.WriteLine("at+set_config=lora:region:AS923");
                Thread.Sleep(500);
 
                // Set the devEUI
-               Console.WriteLine("lora:dev_eui:{DevEui}");
+               Debug.WriteLine("lora:dev_eui");
                serialDevice.WriteLine($"at+set_config=lora:dev_eui:{DevEui}");
                Thread.Sleep(500);
 
                // Set the appEUI
-               Console.WriteLine("lora:app_eui:{AppEui}");
+               Debug.WriteLine("lora:app_eui");
                serialDevice.WriteLine($"at+set_config=lora:app_eui:{AppEui}");
                Thread.Sleep(500);
 
                // Set the appKey
-               Console.WriteLine("lora:app_key:{AppKey}");
+               Debug.WriteLine("lora:app_key");
                serialDevice.WriteLine($"at+set_config=lora:app_key:{AppKey}");
                Thread.Sleep(500);
 
                // Set the Confirm flag
-               Console.WriteLine("lora:confirm:0");
+               Debug.WriteLine("lora:confirm");
                serialDevice.WriteLine("at+set_config=lora:confirm:0");
                Thread.Sleep(500);
 
-               // Reset the device
-               Console.WriteLine("device:restart");
-               serialDevice.WriteLine($"at+set_config=device:restart");
-               Thread.Sleep(10000);
+               Debug.WriteLine("lora:adr");
+               serialDevice.WriteLine("at+set_config=lora:adr:1");
+               Thread.Sleep(500);
 
                // Join the network
-               Console.WriteLine("at+join");
+               Debug.WriteLine("at+join");
                serialDevice.WriteLine("at+join");
                Thread.Sleep(10000);
 
