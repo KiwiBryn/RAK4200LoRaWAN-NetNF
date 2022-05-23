@@ -14,7 +14,10 @@
 // limitations under the License.
 //
 //---------------------------------------------------------------------------------
-namespace devMobile.IoT.LoRaWAN.NanoFramework.RAK4200
+ #define DEVEUI_SET
+#define OTAA
+//#define ABP
+namespace devMobile.IoT.LoRaWAN
 {
    public class Config
    {
