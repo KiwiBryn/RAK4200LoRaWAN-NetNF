@@ -8,3 +8,10 @@ This repo has the source code for the series of blog posts written as I work on 
 02. [OTAA Join](http://blog.devmobile.co.nz/2022/05/12/net-nanoframework-rak4200-lorawan-library-otaa-join/)
 03. [ABP Join](http://blog.devmobile.co.nz/2022/05/21/net-nanoframework-rak4200-lorawan-library-abp-join/)
 04. [Factory Reset](http://blog.devmobile.co.nz/)
+
+
+![STM Discovery 769I + Grove Base Shield V2.0 for Arduino](RAK4200Discovery796TestRig.jpg)
+
+![SparkFun ESP32 Thing WROOM](RAK4200ThingyESP32Testrig.jpg)
+
+I used a local [RAK7258 WisGate Edge Lite](https://store.rakwireless.com/collections/wisgate-edge/products/rak7258-micro-gateway) connected to [The Things Network](https://www.thethingsnetwork.org/) to test my implementation.
