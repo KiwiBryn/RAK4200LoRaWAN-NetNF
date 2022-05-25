@@ -31,7 +31,9 @@
 #define PAYLOAD_BYTES
 //#define OTAA
 //#define ABP
-//#define CONFIRMED
+//#define CONFIRMED or UNCONFIRMED
+//#define REGION_SET
+//#define ADR_SET
 namespace devMobile.IoT.LoRaWAN
 {
 	using System;
@@ -116,6 +118,7 @@ namespace devMobile.IoT.LoRaWAN
 					}
 #endif
 
+#if REGION_SET
 					Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} Region{Region}");
 					result = device.Region(Region);
 					if (result != Result.Success)
@@ -123,8 +126,9 @@ namespace devMobile.IoT.LoRaWAN
 						Debug.WriteLine($"Region on failed {result}");
 						return;
 					}
+#endif
 
-
+#if ADR_SET
 					Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} ADR On");
 					result = device.AdrOn();
 					if (result != Result.Success)
@@ -132,7 +136,7 @@ namespace devMobile.IoT.LoRaWAN
 						Debug.WriteLine($"ADR on failed {result}");
 						return;
 					}
-
+#endif
 #if CONFIRMED
                Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} Confirmed");
                result = device.UplinkMessageConfirmationOn();
@@ -141,7 +145,8 @@ namespace devMobile.IoT.LoRaWAN
                   Debug.WriteLine($"Confirm on failed {result}");
                   return;
                }
-#else
+#endif
+#if UNCONFIRMED
 					Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} Unconfirmed");
 					result = device.UplinkMessageConfirmationOff();
 					if (result != Result.Success)
