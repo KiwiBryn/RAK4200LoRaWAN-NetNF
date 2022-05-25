@@ -7,7 +7,7 @@ This repo has the source code for the series of blog posts written as I work on 
 01. [Basic connectivity](http://blog.devmobile.co.nz/2022/05/06/net-nanoframework-rak4200-lorawan-library-basic-connectivity/)
 02. [OTAA Join](http://blog.devmobile.co.nz/2022/05/12/net-nanoframework-rak4200-lorawan-library-otaa-join/)
 03. [ABP Join](http://blog.devmobile.co.nz/2022/05/21/net-nanoframework-rak4200-lorawan-library-abp-join/)
-04. [Factory Reset](http://blog.devmobile.co.nz/)
+04. [Factory Reset](http://blog.devmobile.co.nz/2022/05/25/net-nanoframework-rak4200-factory-reset/)
 
 
 ![STM Discovery 769I + Grove Base Shield V2.0 for Arduino](RAK4200Discovery796TestRig.jpg)
