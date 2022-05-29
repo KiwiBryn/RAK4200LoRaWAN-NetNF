@@ -1,5 +1,5 @@
 # RAK4200LoRaWAN-NetNF
-A C# library [LoRaWAN](https://lora-alliance.org/about-lorawan) connectivity for [RAKwireless](https://www.rakwireless.com/en-us) [RAK4200 Module](https://store.rakwireless.com/products/rak4200-lora-module) equipped [.NET nanoFramework](https://www.nanoframework.net/) powered devices.
+A C# library for [LoRaWAN](https://lora-alliance.org/about-lorawan) connectivity for [RAKwireless](https://www.rakwireless.com/en-us) [RAK4200 Module](https://store.rakwireless.com/products/rak4200-lora-module) equipped [.NET nanoFramework](https://www.nanoframework.net/) powered devices.
 
 This repo has the source code for the series of blog posts written as I work on the library
 
