@@ -24,7 +24,7 @@
 //
 //---------------------------------------------------------------------------------
 #define ST_STM32F769I_DISCOVERY      // nanoff --target ST_STM32F769I_DISCOVERY --update 
-//#define ESP32_WROOM   //nanoff --target ESP32_PSRAM_REV0 --serialport COM17 --update
+//#define ESP32_WROOM   // nanoff --target ESP32_REV0 --serialport COM17 --update
 //#define DEVICE_DEVEUI_SET
 //#define FACTORY_RESET
 //#define PAYLOAD_BCD
