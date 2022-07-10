@@ -283,7 +283,7 @@ namespace devMobile.IoT.LoRaWAN
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the devMobile.IoT.LoRaWAN.NetCore.RAK3172.Rak3172LoRaWanDevice class using the
+		/// Initializes a new instance of the devMobile.IoT.LoRaWAN.NetCore.RAK4200Device class using the
 		/// specified port name, baud rate, parity bit, data bits, and stop bit.
 		/// </summary>
 		/// <param name="serialPortId">The port to use (for example, COM1).</param>
