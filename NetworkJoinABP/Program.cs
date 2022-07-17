@@ -52,8 +52,8 @@ namespace devMobile.IoT.LoRaWAN.nanoFramework.RAK4200
          try
          {
 #if ESP32_WROOM
-            Configuration.SetPinFunction(Gpio.IO16, DeviceFunction.COM2_TX);
-            Configuration.SetPinFunction(Gpio.IO17, DeviceFunction.COM2_RX);
+			Configuration.SetPinFunction(Gpio.IO17, DeviceFunction.COM2_TX);
+			Configuration.SetPinFunction(Gpio.IO16, DeviceFunction.COM2_RX);
 #endif
 
             Debug.Write("Ports:");
