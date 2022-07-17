@@ -60,7 +60,7 @@ namespace devMobile.IoT.LoRaWAN
 		private const string PayloadBcd = "48656c6c6f204c6f526157414e"; // Hello LoRaWAN in BCD
 #endif
 #if PAYLOAD_BYTES
-      private static readonly byte[] PayloadBytes = { 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x4c, 0x6f, 0x52, 0x61, 0x57, 0x41, 0x4e}; // Hello LoRaWAN in bytes
+		private static readonly byte[] PayloadBytes = { 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x4c, 0x6f, 0x52, 0x61, 0x57, 0x41, 0x4e}; // Hello LoRaWAN in bytes
 #endif
 
 		public static void Main()
@@ -94,7 +94,7 @@ namespace devMobile.IoT.LoRaWAN
 					}
 
 #if CONFIRMED
-               device.OnMessageConfirmation += OnMessageConfirmationHandler;
+					device.OnMessageConfirmation += OnMessageConfirmationHandler;
 #endif
 					device.OnReceiveMessage += OnReceiveMessageHandler;
 
@@ -138,13 +138,13 @@ namespace devMobile.IoT.LoRaWAN
 					}
 #endif
 #if CONFIRMED
-               Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} Confirmed");
-               result = device.UplinkMessageConfirmationOn();
-               if (result != Result.Success)
-               {
-                  Debug.WriteLine($"Confirm on failed {result}");
-                  return;
-               }
+					Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} Confirmed");
+					result = device.UplinkMessageConfirmationOn();
+					if (result != Result.Success)
+					{
+						Debug.WriteLine($"Confirm on failed {result}");
+						return;
+					}
 #endif
 #if UNCONFIRMED
 					Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} Unconfirmed");
@@ -167,13 +167,13 @@ namespace devMobile.IoT.LoRaWAN
 #endif
 
 #if ABP
-               Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} ABP");
-               result = device.AbpInitialise(Config.DevAddress, Config.NwksKey, Config.AppsKey);
-               if (result != Result.Success)
-               {
-                  Debug.WriteLine($"ABP Initialise failed {result}");
-                  return;
-               }
+					Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} ABP");
+					result = device.AbpInitialise(Config.DevAddress, Config.NwksKey, Config.AppsKey);
+					if (result != Result.Success)
+					{
+						Debug.WriteLine($"ABP Initialise failed {result}");
+						return;
+					}
 #endif
 
 					Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} Join start Timeout:{JoinTimeOut:hh:mm:ss}");
@@ -192,8 +192,8 @@ namespace devMobile.IoT.LoRaWAN
 						result = device.Send(MessagePort, PayloadBcd, SendTimeout);
 #endif
 #if PAYLOAD_BYTES
-                  Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} Send Timeout:{SendTimeout:hh:mm:ss} port:{MessagePort} payload Bytes:{BitConverter.ToString(PayloadBytes)}");
-                  result = device.Send(MessagePort, PayloadBytes, SendTimeout);
+						Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} Send Timeout:{SendTimeout:hh:mm:ss} port:{MessagePort} payload Bytes:{BitConverter.ToString(PayloadBytes)}");
+						result = device.Send(MessagePort, PayloadBytes, SendTimeout);
 #endif
 						if (result != Result.Success)
 						{
@@ -211,10 +211,10 @@ namespace devMobile.IoT.LoRaWAN
 		}
 
 #if CONFIRMED
-      static void OnMessageConfirmationHandler(int rssi, int snr)
-      {
-         Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} Send Confirm RSSI:{rssi} SNR:{snr}");
-      }
+		static void OnMessageConfirmationHandler(int rssi, int snr)
+		{
+			Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} Send Confirm RSSI:{rssi} SNR:{snr}");
+		}
 #endif
 
 		static void OnReceiveMessageHandler(byte port, int rssi, int snr, string payloadBcd)
@@ -223,6 +223,5 @@ namespace devMobile.IoT.LoRaWAN
 
 			Debug.WriteLine($"{DateTime.UtcNow:hh:mm:ss} Receive Message RSSI:{rssi} SNR:{snr} Port:{port} Payload:{payloadBcd} PayLoadBytes:{BitConverter.ToString(payloadBytes)}");
 		}
-
 	}
 }
