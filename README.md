@@ -14,4 +14,7 @@ This repo has the source code for the series of blog posts written as I work on 
 
 ![SparkFun ESP32 Thing WROOM](RAK4200ThingyESP32Testrig.jpg)
 
+![RAK2305 + RAK5005](RA4200RAK2305EVBSetup.jpg)
+
 I used a local [RAK7258 WisGate Edge Lite](https://store.rakwireless.com/collections/wisgate-edge/products/rak7258-micro-gateway) connected to [The Things Network](https://www.thethingsnetwork.org/) to test my implementation.
+
