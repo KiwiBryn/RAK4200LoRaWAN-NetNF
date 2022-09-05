@@ -3,11 +3,12 @@ A C# library for [LoRaWAN](https://lora-alliance.org/about-lorawan) connectivity
 
 This repo has the source code for the series of blog posts written as I work on the library
 
-01. [Basic connectivity](http://blog.devmobile.co.nz/2022/05/06/net-nanoframework-rak4200-lorawan-library-basic-connectivity/)
+01. [Basic connectivity-Breakout Board](http://blog.devmobile.co.nz/2022/05/06/net-nanoframework-rak4200-lorawan-library-basic-connectivity/)
 02. [OTAA Join](http://blog.devmobile.co.nz/2022/05/12/net-nanoframework-rak4200-lorawan-library-otaa-join/)
 03. [ABP Join](http://blog.devmobile.co.nz/2022/05/21/net-nanoframework-rak4200-lorawan-library-abp-join/)
 04. [Factory Reset](http://blog.devmobile.co.nz/2022/05/25/net-nanoframework-rak4200-factory-reset/)
 05. [Library Usage](http://blog.devmobile.co.nz/2022/06/06/net-nanoframework-rak4200-library-usage/)
+06. [Basic connectivity-Evaluation Board](http://blog.devmobile.co.nz/2022/09/05/net-nanoframework-rak2305-rak4200-basic-connectivity/)
 
 
 ![STM Discovery 769I + Grove Base Shield V2.0 for Arduino](RAK4200Discovery796TestRig.jpg)
